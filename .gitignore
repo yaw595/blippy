@@ -1,0 +1,14 @@
+# Build output
+build/
+build-release/
+dist/
+DerivedData/
+*.dmg
+
+# Xcode / macOS
+xcuserdata/
+*.xcuserstate
+.DS_Store
+
+# The adb binary is not committed. Run scripts/fetch-adb.sh to download it.
+Vendor/adb

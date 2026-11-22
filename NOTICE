@@ -1,0 +1,15 @@
+Blippy
+Copyright 2026 Blippy contributors
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Blippy is based on NearDrop by Grishka (https://github.com/grishka/NearDrop),
+which is released into the public domain under the Unlicense
+(see LICENSES/NearDrop-Unlicense.txt).
+
+Blippy bundles and uses third-party software. The attributions and license
+texts are in THIRD_PARTY_NOTICES.md and the LICENSES/ folder.
+
+Android, Quick Share and Pixel are trademarks of Google LLC. Blippy is an
+independent project. It is not affiliated with, endorsed by or sponsored by
+Google, Apple or the NearDrop project.

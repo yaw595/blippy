@@ -1,0 +1,40 @@
+name: Bug report
+description: Something doesn't work
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting! Please check the [troubleshooting guide](../blob/main/docs/TROUBLESHOOTING.md) first.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what actually happened?
+    validations:
+      required: true
+  - type: dropdown
+    id: method
+    attributes:
+      label: Transfer method
+      options: [Wi-Fi (Quick Share), USB cable (adb), Both / not sure, Not about transfers]
+    validations:
+      required: true
+  - type: input
+    id: mac
+    attributes:
+      label: Mac and macOS version
+      placeholder: "MacBook Pro M3, macOS 26.1"
+    validations:
+      required: true
+  - type: input
+    id: phone
+    attributes:
+      label: Phone and Android version
+      placeholder: "Pixel 6 Pro, Android 16"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Blippy version
+      placeholder: "0.1.0 (Blippy > About)"

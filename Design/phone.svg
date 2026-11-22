@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 120" width="64" height="120" fill="none">
+  <title>Phone</title>
+  <defs>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF4EC"/>
+      <stop offset="1" stop-color="#FFE0E8"/>
+    </linearGradient>
+  </defs>
+  <!-- screen / body -->
+  <rect x="1.5" y="1.5" width="61" height="117" rx="14" fill="url(#screen)" stroke="#1D1D1F" stroke-width="3"/>
+  <!-- punch-hole camera -->
+  <circle cx="32" cy="14" r="3" fill="#1D1D1F"/>
+  <!-- home bar -->
+  <rect x="22" y="107" width="20" height="4" rx="2" fill="#1D1D1F"/>
+</svg>
