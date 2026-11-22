@@ -43,6 +43,7 @@
 - **USB cable for big files.** Pushes files straight into the phone's **Downloads** folder with `adb`,
   checks that every file arrived complete, and shows speed and time left.
 - **Several phones at once**, with progress for each.
+- **Any kind of file**, including large ones: a single transfer of about **5 GB finished in around 10 minutes**.
 - **Folders** are zipped for you. **File previews**, sounds and notifications tell you what's happening.
 - **History and Devices** pages, kept on your Mac only. Remove an entry, or delete a received file for good.
 - Native Mac app: menu bar, full screen, Dock badge for waiting transfers, global shortcut **⌃⌥N**.
@@ -80,6 +81,27 @@ Requires **macOS 14 (Sonoma) or later** and an Android phone with Quick Share (A
 | Send from Finder | Right-click a file → **Share → Blippy**. (Enable it once in System Settings → General → Login Items & Extensions → Sharing.) |
 | Receive | On the phone, **Share → Quick Share →** your Mac. Accept in the notification or on the Receive page. Files land in **Downloads**. |
 | Send over cable | Plug in the phone, turn on **USB debugging** (the Cable page shows how), tap **Allow** on the phone, then drop files on the Cable page. |
+
+## Tested so far
+
+Blippy has been used on real transfers, not just in theory:
+
+| What was tried | Result |
+|---|---|
+| **Different file types**: documents (PDF), photos (JPG) and videos (MP4) | Sent and opened fine on the phone. Files are sent exactly as they are, so the type doesn't matter. |
+| **Folders** | Zipped automatically, then sent as a single `.zip` that opens normally on the phone. |
+| **A large transfer** | About **5 GB in roughly 10 minutes**, which works out to around 8 MB/s on average, without failing or needing a restart. |
+| **Both directions** | Phone to Mac and Mac to phone, over Wi-Fi, and Mac to phone over a USB cable. |
+
+A few honest notes on those results:
+
+- They come from the maintainer's own testing with **one Pixel 6 Pro and one Mac**, so treat them as a good sign, not a
+  guarantee. Reports from other phones and Macs are very welcome.
+- **Speed depends on your setup.** Wi-Fi speed varies with the router, the distance and how busy the network is, and a
+  USB cable is usually steadier and faster for very large files. About 5 GB in 10 minutes is what happened on one
+  setup, not a promise.
+- Large files send in small chunks with a progress bar, speed and time-left estimate, so you can see how a transfer is going
+  and cancel it any time.
 
 ## How it works
 
