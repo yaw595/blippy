@@ -8,8 +8,8 @@ developers or to anyone else.
 
 - **Wi-Fi transfers** go directly between your Mac and your phone on your local network, using
   the Quick Share protocol. They are encrypted end to end between the two devices.
-- **Cable transfers** go over USB using Android Debug Bridge (`adb`), which Blippy runs on your
-  Mac. `adb` talks to your phone over the cable and to a local helper process on your Mac.
+- **Cable transfers** go over USB, either with Android Debug Bridge (`adb`) or with Blippy's own MTP helper
+  (`blippy-mtp`), both run on your Mac. They talk to your phone over the cable only; nothing goes to the internet.
 - Blippy makes **no connections to the internet**. The only web addresses it knows are links you
   choose to open (the GitHub page or the optional support page), which open in your browser.
 

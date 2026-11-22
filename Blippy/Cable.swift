@@ -3,9 +3,10 @@
 //  Cable.swift
 //  Blippy
 //
-//  Sending over USB. Main path: the bundled `adb` pushes files to /sdcard/Download on the phone,
-//  checks the size afterwards, and asks the phone to index the file.
-//  Fallback: Image Capture (PTP "Photo transfer" mode) for photos and videos only.
+//  Sending over USB. Two paths that both send any file type to Downloads on the phone:
+//   - adb (USB debugging on): fastest; checks the size afterwards and asks the phone to index the file.
+//   - MTP (USB set to "File transfer"): needs no developer mode; done by the bundled `blippy-mtp` helper.
+//  Last resort: Image Capture (PTP "Photo transfer" mode) for photos and videos only.
 //
 
 import AppKit
@@ -73,6 +74,114 @@ enum ADB {
 	}
 }
 
+// MARK: - MTP ("File transfer" mode, no developer mode needed)
+
+enum MTP {
+	struct Outcome { let ok: Bool; let code: String; let message: String }
+
+	/// The helper bundled in the app; the build output as a fallback when running from Xcode.
+	static var path: String? {
+		[Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/blippy-mtp").path]
+			.first { FileManager.default.isExecutableFile(atPath: $0) }
+	}
+
+	/// Name of the first phone that is in File transfer mode, or nil.
+	static func detect() async -> String? {
+		guard let path else { return nil }
+		return await withCheckedContinuation { continuation in
+			let process = Process()
+			process.executableURL = URL(fileURLWithPath: path)
+			process.arguments = ["detect"]
+			let pipe = Pipe()
+			process.standardOutput = pipe
+			process.standardError = FileHandle.nullDevice
+			process.standardInput = FileHandle.nullDevice
+			process.terminationHandler = { _ in
+				let text = String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+				let name = text.split(separator: "\n").first { $0.hasPrefix("MTP ") }.map { line -> String in
+					let parts = line.split(separator: " ", maxSplits: 2, omittingEmptySubsequences: true)
+					return parts.count == 3 ? String(parts[2]) : NSLocalizedString("CablePhone", value: "Phone", comment: "")
+				}
+				continuation.resume(returning: name)
+			}
+			do { try process.run() } catch { continuation.resume(returning: nil); return }
+			DispatchQueue.global().asyncAfter(deadline: .now() + 10) { if process.isRunning { process.terminate() } }
+		}
+	}
+
+	/// Sends one file. `progress` gets (bytes sent, total). Terminating the process cancels the transfer.
+	static func send(_ file: URL, started: @escaping (Process) -> Void, progress: @escaping (Int64, Int64) -> Void) async -> Outcome {
+		guard let path else { return Outcome(ok: false, code: "MISSING", message: NSLocalizedString("MtpMissing", value: "The file-transfer tool is missing from this build", comment: "")) }
+		return await withCheckedContinuation { continuation in
+			let process = Process()
+			process.executableURL = URL(fileURLWithPath: path)
+			process.arguments = ["send", "--dest", "Download", file.path]
+			let pipe = Pipe()
+			process.standardOutput = pipe
+			process.standardError = FileHandle.nullDevice
+			process.standardInput = FileHandle.nullDevice
+			let state = ParseState()
+			let handle = pipe.fileHandleForReading
+			handle.readabilityHandler = { h in
+				state.feed(h.availableData, progress: progress)
+			}
+			process.terminationHandler = { proc in
+				handle.readabilityHandler = nil
+				state.feed(handle.readDataToEndOfFile(), progress: progress)
+				let ok = state.done && proc.terminationStatus == 0
+				continuation.resume(returning: Outcome(ok: ok, code: ok ? "OK" : state.errorCode ?? "IO", message: state.errorMessage ?? (ok ? "" : NSLocalizedString("TransferFailed", value: "Failed", comment: ""))))
+			}
+			do { try process.run() } catch {
+				continuation.resume(returning: Outcome(ok: false, code: "IO", message: error.localizedDescription))
+				return
+			}
+			started(process)
+		}
+	}
+
+	/// Reads the helper's output a line at a time (lines can arrive split across reads).
+	private final class ParseState: @unchecked Sendable {
+		private let lock = NSLock()
+		private var pending = Data()
+		var done = false
+		var errorCode: String?
+		var errorMessage: String?
+
+		func feed(_ data: Data, progress: (Int64, Int64) -> Void) {
+			lock.lock(); defer { lock.unlock() }
+			pending.append(data)
+			while let newline = pending.firstIndex(of: 10) {
+				let line = String(data: pending[pending.startIndex..<newline], encoding: .utf8) ?? ""
+				pending.removeSubrange(pending.startIndex...newline)
+				if line.hasPrefix("PROGRESS ") {
+					let parts = line.split(separator: " ")
+					if parts.count == 3, let sent = Int64(parts[1]), let total = Int64(parts[2]) { progress(sent, total) }
+				} else if line == "DONE" {
+					done = true
+				} else if line.hasPrefix("ERROR ") {
+					let parts = line.split(separator: " ", maxSplits: 2, omittingEmptySubsequences: true)
+					errorCode = parts.count > 1 ? String(parts[1]) : "IO"
+					errorMessage = Self.explain(code: errorCode ?? "IO", text: parts.count > 2 ? String(parts[2]) : "")
+				}
+			}
+		}
+
+		private static func explain(code: String, text: String) -> String {
+			switch code {
+			case "NO_DEVICE": return NSLocalizedString("MtpNoDevice", value: "Set the phone’s USB to File transfer", comment: "")
+			case "ACCESS": return NSLocalizedString("MtpAccess", value: "Couldn’t open the phone. Unplug it, plug it back in, and try again", comment: "")
+			case "LOCKED": return NSLocalizedString("MtpLocked", value: "Unlock the phone and keep the screen on", comment: "")
+			case "FULL": return NSLocalizedString("PhoneFull", value: "Not enough space on the phone", comment: "")
+			case "REFUSED": return NSLocalizedString("MtpRefused", value: "The phone refused the file. Check USB is set to File transfer", comment: "")
+			case "SIZE": return NSLocalizedString("SizeMismatch", value: "The copy on the phone is incomplete", comment: "")
+			case "CANCELED": return NSLocalizedString("TransferCanceled", value: "Canceled", comment: "")
+			case "IO": return NSLocalizedString("PhoneGone", value: "The phone disconnected", comment: "")
+			default: return text.isEmpty ? NSLocalizedString("TransferFailed", value: "Failed", comment: "") : text
+			}
+		}
+	}
+}
+
 // MARK: - Model
 
 @MainActor
@@ -82,7 +191,22 @@ final class CableModel: ObservableObject {
 	enum Link: Equatable {
 		case none, noAdb, unauthorized, offline
 		case noDebugging(String)
-		case ready(serial: String, name: String)
+		case ready(serial: String, name: String)   // USB debugging: sends with adb
+		case fileTransfer(name: String)            // USB "File transfer" mode: sends with MTP
+
+		var canSend: Bool {
+			switch self {
+			case .ready, .fileTransfer: return true
+			default: return false
+			}
+		}
+
+		var readyName: String? {
+			switch self {
+			case .ready(_, let name), .fileTransfer(let name): return name
+			default: return nil
+			}
+		}
 	}
 
 	enum Phase { case idle, sending, finished }
@@ -92,7 +216,7 @@ final class CableModel: ObservableObject {
 		let id = UUID()
 		let url: URL
 		let isFolder: Bool
-		let size: Int64
+		var size: Int64
 		var state: State = .waiting
 	}
 
@@ -140,20 +264,26 @@ final class CableModel: ObservableObject {
 	}
 
 	func refresh() async {
-		guard ADB.path != nil else { link = .noAdb; return }
-		let devices = await ADB.devices()
+		let devices = ADB.path == nil ? [] : await ADB.devices()
 		if let device = devices.first(where: { $0.state == "device" }) {
 			if modelNames[device.serial] == nil {
 				let result = await ADB.run(["-s", device.serial, "shell", "getprop", "ro.product.model"], timeout: 8)
 				if result.status == 0, !result.output.isEmpty { modelNames[device.serial] = result.output }
 			}
 			link = .ready(serial: device.serial, name: modelNames[device.serial] ?? Self.usbPhoneName() ?? NSLocalizedString("CablePhone", value: "Phone", comment: ""))
+			return
+		}
+		// No USB debugging: a phone in File transfer mode works without it.
+		if let name = await MTP.detect() {
+			link = .fileTransfer(name: name)
 		} else if devices.contains(where: { $0.state == "unauthorized" }) {
 			link = .unauthorized
 		} else if devices.contains(where: { $0.state == "offline" }) {
 			link = .offline
 		} else if let usb = Self.usbPhoneName() {
 			link = .noDebugging(usb)
+		} else if ADB.path == nil && MTP.path == nil {
+			link = .noAdb
 		} else {
 			link = .none
 		}
@@ -199,9 +329,17 @@ final class CableModel: ObservableObject {
 	// MARK: Sending (adb)
 
 	func send(_ urls: [URL]) {
-		guard case let .ready(serial, name) = link, phase != .sending, !urls.isEmpty else { return }
-		begin(urls, target: name)
-		job = Task { await runJob(serial: serial) }
+		guard phase != .sending, !urls.isEmpty else { return }
+		switch link {
+		case let .ready(serial, name):
+			begin(urls, target: name)
+			job = Task { await runJob(serial: serial) }
+		case let .fileTransfer(name):
+			begin(urls, target: name)
+			job = Task { await runJob(serial: nil) }
+		default:
+			return
+		}
 	}
 
 	func cancel() {
@@ -228,7 +366,8 @@ final class CableModel: ObservableObject {
 		phase = .sending
 	}
 
-	private func runJob(serial: String) async {
+	/// `serial` nil means send over MTP (File transfer mode), otherwise adb.
+	private func runJob(serial: String?) async {
 		let start = Date()
 		let total = max(1, items.reduce(0) { $0 + $1.size })
 		var finishedBytes: Int64 = 0
@@ -239,8 +378,14 @@ final class CableModel: ObservableObject {
 			}
 			items[index].state = .sending(0)
 			do {
-				try await push(index: index, serial: serial) { sent in
-					self.report(finishedBytes + sent, of: total, since: start)
+				if let serial {
+					try await push(index: index, serial: serial) { sent in
+						self.report(finishedBytes + sent, of: total, since: start)
+					}
+				} else {
+					try await pushMTP(index: index) { sent in
+						self.report(finishedBytes + sent, of: total, since: start)
+					}
 				}
 				items[index].state = .done
 			} catch {
@@ -356,6 +501,48 @@ final class CableModel: ObservableObject {
 			return NSLocalizedString("PhoneGone", value: "The phone disconnected", comment: "")
 		}
 		return output.split(separator: "\n").last.map(String.init) ?? NSLocalizedString("TransferFailed", value: "Failed", comment: "")
+	}
+
+	// MARK: Sending (MTP)
+
+	/// Sends one item with the MTP helper. Folders are zipped first, because MTP sends single files.
+	private func pushMTP(index: Int, progress report: @escaping (Int64) -> Void) async throws {
+		var file = items[index].url
+		var cleanup: URL?
+		if items[index].isFolder {
+			guard let zipped = Self.zip(file) else { throw Failure(message: NSLocalizedString("ZipFailed", value: "Couldn’t zip the folder", comment: "")) }
+			file = zipped
+			cleanup = zipped.deletingLastPathComponent()
+			items[index].size = Int64((try? zipped.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0)
+		}
+		defer { if let cleanup { try? FileManager.default.removeItem(at: cleanup) } }
+
+		let outcome = await MTP.send(file, started: { process in
+			Task { @MainActor in self.pushProcess = process }
+		}, progress: { sent, total in
+			Task { @MainActor in
+				self.items[index].state = .sending(Double(sent) / Double(max(1, total)))
+				report(sent)
+			}
+		})
+		pushProcess = nil
+		if canceled || Task.isCancelled || outcome.code == "CANCELED" {
+			throw Failure(message: NSLocalizedString("TransferCanceled", value: "Canceled", comment: ""))
+		}
+		guard outcome.ok else { throw Failure(message: outcome.message) }
+	}
+
+	/// Zips a folder (in a temporary folder the caller removes afterwards).
+	private static func zip(_ folder: URL) -> URL? {
+		var result: URL?
+		var error: NSError?
+		let dir = FileManager.default.temporaryDirectory.appendingPathComponent("blippy-zip-\(UUID().uuidString)")
+		NSFileCoordinator().coordinate(readingItemAt: folder, options: .forUploading, error: &error) { zipped in
+			try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+			let dest = dir.appendingPathComponent(folder.lastPathComponent + ".zip")
+			if (try? FileManager.default.copyItem(at: zipped, to: dest)) != nil { result = dest }
+		}
+		return result
 	}
 
 	// MARK: Sending (Image Capture, photos and videos)

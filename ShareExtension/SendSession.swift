@@ -330,6 +330,10 @@ final class SendSession: NSObject, ShareExtensionDelegate {
 		}
 	}
 
+	func hiddenDevicesChanged(count: Int) {
+		onMain { self.model.hiddenCount = count }
+	}
+
 	func startTransferWithQrCode(device: RemoteDeviceInfo) {
 		onMain {
 			self.model.showQRCode = false

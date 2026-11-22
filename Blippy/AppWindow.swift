@@ -137,21 +137,25 @@ struct AppRoot: View {
 			.padding(.vertical, 12)
 			.navigationSplitViewColumnWidth(210)
 		} detail: {
-			ZStack {
-				switch nav.page {
-				case .send: ShareRootView(model: model)
-				case .received: ReceivePage(store: store)
-				case .cable: CablePage()
-				case .settings: SettingsPage()
-				case .history: HistoryPage(store: .shared)
-				case .devices: DevicesPage(history: .shared, openSend: { nav.page = .send }, openCable: { nav.page = .cable })
+			// The page gets exactly the space the window gives it (GeometryReader reports no size of its own), so a tall
+			// page can never make the window layout taller and push the sidebar items around.
+			GeometryReader { proxy in
+				ZStack {
+					switch nav.page {
+					case .send: ShareRootView(model: model)
+					case .received: ReceivePage(store: store)
+					case .cable: CablePage()
+					case .settings: SettingsPage()
+					case .history: HistoryPage(store: .shared)
+					case .devices: DevicesPage(history: .shared, openSend: { nav.page = .send }, openCable: { nav.page = .cable })
+					}
 				}
+				.id(nav.page)
+				.transition(.opacity)
+				.animation(.easeInOut(duration: 0.18), value: nav.page)
+				.frame(width: proxy.size.width, height: proxy.size.height)
+				.clipped() // a page can never spill over the sidebar or title bar
 			}
-			.id(nav.page)
-			.transition(.opacity)
-			.animation(.easeInOut(duration: 0.18), value: nav.page)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.clipped() // a page can never spill over the sidebar or title bar
 			.navigationTitle(nav.page.title)
 		}
 		.toolbar(removing: .sidebarToggle)
@@ -393,8 +397,7 @@ private struct CablePage: View {
 
 	private var waitingForPhone: Bool {
 		guard cable.phase == .idle else { return false }
-		if case .ready = cable.link { return false }
-		return true
+		return !cable.link.canSend
 	}
 
 	private var pageBody: some View {
@@ -427,7 +430,7 @@ private struct CablePage: View {
 			}
 		}
 		.dropDestination(for: URL.self) { urls, _ in
-			guard case .ready = cable.link, cable.phase != .sending else { return false }
+			guard cable.link.canSend, cable.phase != .sending else { return false }
 			cable.send(urls)
 			return true
 		} isTargeted: { dropTargeted = $0 }
@@ -444,10 +447,10 @@ private struct CablePage: View {
 			switch cable.link {
 			case .none: return NSLocalizedString("CableConnect", value: "Connect your phone", comment: "")
 			case .noAdb: return NSLocalizedString("CableNoAdb", value: "adb not found", comment: "")
-			case .noDebugging: return NSLocalizedString("CableDebugging", value: "Turn on USB debugging", comment: "")
+			case .noDebugging: return NSLocalizedString("CableFileTransfer", value: "Set USB to File transfer", comment: "")
 			case .unauthorized: return NSLocalizedString("CableAllow", value: "Allow on your phone", comment: "")
 			case .offline: return NSLocalizedString("CableReconnect", value: "Reconnect the cable", comment: "")
-			case .ready(_, let name): return String(format: NSLocalizedString("CableReady", value: "%@ is ready", comment: ""), name)
+			case .ready(_, let name), .fileTransfer(let name): return String(format: NSLocalizedString("CableReady", value: "%@ is ready", comment: ""), name)
 			}
 		}
 	}
@@ -460,10 +463,10 @@ private struct CablePage: View {
 			switch cable.link {
 			case .none: return NSLocalizedString("CableConnectHint", value: "Plug in a USB-C data cable and unlock the phone.", comment: "")
 			case .noAdb: return NSLocalizedString("CableNoAdbHint", value: "The bundled adb tool is missing from this build.", comment: "")
-			case .noDebugging(let name): return String(format: NSLocalizedString("CableDebuggingHint", value: "%@ is connected. Enable Developer options, then USB debugging.", comment: ""), name)
-			case .unauthorized: return NSLocalizedString("CableAllowHint", value: "Tap Allow on the “Allow USB debugging?” prompt. Tick “Always allow” so it asks once.", comment: "")
+			case .noDebugging(let name): return String(format: NSLocalizedString("CableDebuggingHint", value: "%@ is connected. Unlock it, then choose File transfer in the USB notification.", comment: ""), name)
+			case .unauthorized: return NSLocalizedString("CableAllowHint", value: "Tap Allow on the “Allow USB debugging?” prompt and tick “Always allow”. Or choose File transfer in the USB notification.", comment: "")
 			case .offline: return NSLocalizedString("CableOfflineHint", value: "The phone isn’t responding. Unplug it and plug it back in.", comment: "")
-			case .ready: return NSLocalizedString("CableReadyHint", value: "Drop files here. They save to Downloads on your phone.", comment: "")
+			case .ready, .fileTransfer: return NSLocalizedString("CableReadyHint", value: "Drop files here. They save to Downloads on your phone. Keep the phone unlocked.", comment: "")
 			}
 		}
 	}
@@ -485,13 +488,24 @@ private struct CablePage: View {
 			}
 		case .idle:
 			switch cable.link {
-			case .noDebugging:
-				VStack(alignment: .leading, spacing: 10) {
-					step("1", NSLocalizedString("DebugStep1", value: "Settings → About phone → tap Build number 7 times", comment: ""))
-					step("2", NSLocalizedString("DebugStep2", value: "Settings → System → Developer options", comment: ""))
-					step("3", NSLocalizedString("DebugStep3", value: "Turn on USB debugging", comment: ""))
+			case .noDebugging, .unauthorized:
+				VStack(alignment: .leading, spacing: 14) {
+					VStack(alignment: .leading, spacing: 10) {
+						Text(NSLocalizedString("CableOptionA", value: "Easiest: File transfer (no developer mode)", comment: "")).font(.system(size: 12, weight: .semibold)).foregroundStyle(.secondary)
+						step("1", NSLocalizedString("FileStep1", value: "Unlock the phone and keep the screen on", comment: ""))
+						step("2", NSLocalizedString("FileStep2", value: "Swipe down and tap “Charging this device via USB”", comment: ""))
+						step("3", NSLocalizedString("FileStep3", value: "Choose File transfer", comment: ""))
+					}
+					VStack(alignment: .leading, spacing: 10) {
+						Text(NSLocalizedString("CableOptionB", value: "Faster: USB debugging (needs developer mode)", comment: "")).font(.system(size: 12, weight: .semibold)).foregroundStyle(.secondary)
+						step("1", NSLocalizedString("DebugStep1", value: "Settings → About phone → tap Build number 7 times", comment: ""))
+						step("2", NSLocalizedString("DebugStep2", value: "Settings → System → Developer options (Samsung: Settings → Developer options)", comment: ""))
+						step("3", NSLocalizedString("DebugStep3", value: "Turn on USB debugging, then tap Allow on the phone", comment: ""))
+					}
+					Text(NSLocalizedString("CableAutoLock", value: "Tip: turn off auto-lock or set a long screen timeout while sending. Many phones (Samsung especially) pause USB when the screen locks.", comment: ""))
+						.font(.system(size: 11)).foregroundStyle(.tertiary).frame(maxWidth: 360, alignment: .leading).fixedSize(horizontal: false, vertical: true)
 				}
-			case .ready:
+			case .ready, .fileTransfer:
 				VStack(spacing: 12) {
 					Button(NSLocalizedString("ChooseFiles", value: "Choose Files…", comment: "")) { choose(photosOnly: false) }
 						.buttonStyle(GlassButtonStyle(prominent: true))
@@ -514,8 +528,7 @@ private struct CablePage: View {
 
 	private var photosFallback: Bool {
 		guard cable.phase == .idle, cable.cameraName != nil else { return false }
-		if case .ready = cable.link { return false }
-		return true
+		return !cable.link.canSend
 	}
 
 	private func step(_ number: String, _ text: String) -> some View {

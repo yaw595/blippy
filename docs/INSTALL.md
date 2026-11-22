@@ -49,9 +49,18 @@ and tick **Blippy**.
 
 ## 5. On your phone
 
-- **Wi-Fi:** keep the phone and Mac on the same Wi-Fi. To send to the phone, open **Quick Share** and tap
-  **Receive** (and set visibility to **Everyone**). To send to the Mac, share a file and pick your Mac.
-- **Cable:** turn on **USB debugging** (Settings → About phone → tap *Build number* 7 times →
-  Settings → System → Developer options → *USB debugging*), plug in the cable, and tap **Allow** on the phone.
+- **Wi-Fi:** keep the phone and Mac on the same Wi-Fi. To send to the phone, open **Quick Share**, set **Who can share
+  with you** to **Everyone** (on Samsung: **Anyone nearby**, which only lasts 10 minutes), and keep that screen open and
+  the phone unlocked. To send to the Mac, share a file and pick your Mac.
+  - **Turn off auto-lock** (or set a long screen timeout) while you send: Settings → Display → Screen timeout. Many
+    phones, Samsung especially, stop sharing and pause USB when the screen locks.
+  - Blippy can only see a phone that is showing its name. A phone that is hidden is reported as "nearby but hidden";
+    the QR code or the cable still work.
+- **Cable, option 1: File transfer** (easiest, no developer mode). Plug in a USB cable that carries data, unlock the
+  phone, swipe down, tap **Charging this device via USB**, and choose **File transfer**.
+- **Cable, option 2: USB debugging** (a little faster). Enable developer mode: Settings → About phone → tap
+  *Build number* 7 times (on Samsung: Settings → About phone → Software information → *Build number*). Then open
+  Settings → System → Developer options (on Samsung: Settings → Developer options), turn on **USB debugging**, plug in
+  the cable, and tap **Allow** on the phone (tick “Always allow”).
 
 Stuck? See [TROUBLESHOOTING.md](TROUBLESHOOTING.md).

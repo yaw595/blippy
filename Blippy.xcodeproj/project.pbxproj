@@ -461,6 +461,8 @@
 			inputPaths = (
 				"$(SRCROOT)/Vendor/adb",
 				"$(SRCROOT)/Vendor/adb-NOTICE.txt",
+				"$(SRCROOT)/Vendor/blippy-mtp",
+				"$(SRCROOT)/LICENSES/libusb-LGPL-2.1.txt",
 				"$(SRCROOT)/LICENSE",
 				"$(SRCROOT)/NOTICE",
 				"$(SRCROOT)/THIRD_PARTY_NOTICES.md",
@@ -473,11 +475,13 @@
 				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/LICENSE.txt",
 				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/NOTICE.txt",
 				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/ADB_NOTICE.txt",
+				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Helpers/blippy-mtp",
+				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/LIBUSB_LICENSE.txt",
 				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/THIRD_PARTY_NOTICES.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nif [ ! -f \"$SRCROOT/Vendor/adb\" ]; then echo \"error: Vendor/adb is missing. Run scripts/fetch-adb.sh first.\"; exit 1; fi\nBUNDLE=\"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH\"\nmkdir -p \"$BUNDLE/Helpers\" \"$BUNDLE/Resources\"\ncp \"$SRCROOT/Vendor/adb\" \"$BUNDLE/Helpers/adb\"\ncodesign --force --sign - \"$BUNDLE/Helpers/adb\"\ncp \"$SRCROOT/LICENSE\" \"$BUNDLE/Resources/LICENSE.txt\"\ncp \"$SRCROOT/NOTICE\" \"$BUNDLE/Resources/NOTICE.txt\"\ncp \"$SRCROOT/Vendor/adb-NOTICE.txt\" \"$BUNDLE/Resources/ADB_NOTICE.txt\"\ncp \"$SRCROOT/THIRD_PARTY_NOTICES.md\" \"$BUNDLE/Resources/THIRD_PARTY_NOTICES.txt\"\n";
+			shellScript = "set -e\nif [ ! -f \"$SRCROOT/Vendor/adb\" ]; then echo \"error: Vendor/adb is missing. Run scripts/fetch-adb.sh first.\"; exit 1; fi\nBUNDLE=\"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH\"\nmkdir -p \"$BUNDLE/Helpers\" \"$BUNDLE/Resources\"\ncp \"$SRCROOT/Vendor/adb\" \"$BUNDLE/Helpers/adb\"\ncodesign --force --sign - \"$BUNDLE/Helpers/adb\"\nif [ ! -f \"$SRCROOT/Vendor/blippy-mtp\" ]; then echo \"error: Vendor/blippy-mtp is missing. Run scripts/build-mtp.sh first.\"; exit 1; fi\ncp \"$SRCROOT/Vendor/blippy-mtp\" \"$BUNDLE/Helpers/blippy-mtp\"\ncodesign --force --sign - \"$BUNDLE/Helpers/blippy-mtp\"\ncp \"$SRCROOT/LICENSES/libusb-LGPL-2.1.txt\" \"$BUNDLE/Resources/LIBUSB_LICENSE.txt\"\ncp \"$SRCROOT/LICENSE\" \"$BUNDLE/Resources/LICENSE.txt\"\ncp \"$SRCROOT/NOTICE\" \"$BUNDLE/Resources/NOTICE.txt\"\ncp \"$SRCROOT/Vendor/adb-NOTICE.txt\" \"$BUNDLE/Resources/ADB_NOTICE.txt\"\ncp \"$SRCROOT/THIRD_PARTY_NOTICES.md\" \"$BUNDLE/Resources/THIRD_PARTY_NOTICES.txt\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -560,7 +564,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Blippy;
@@ -571,7 +575,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.yaw595.Blippy.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -587,7 +591,7 @@
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Blippy;
@@ -598,7 +602,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.yaw595.Blippy.ShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -738,7 +742,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Blippy/Info.plist;
@@ -753,7 +757,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.yaw595.Blippy;
 				PRODUCT_MODULE_NAME = Blippy;
 				PRODUCT_NAME = Blippy;
@@ -778,7 +782,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Blippy/Info.plist;
@@ -793,7 +797,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.yaw595.Blippy;
 				PRODUCT_MODULE_NAME = Blippy;
 				PRODUCT_NAME = Blippy;

@@ -133,7 +133,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 		let paragraph=NSMutableParagraphStyle()
 		paragraph.alignment = .center
 		let base:[NSAttributedString.Key:Any]=[.font: NSFont.systemFont(ofSize: 11), .foregroundColor: NSColor.secondaryLabelColor, .paragraphStyle: paragraph]
-		let credits=NSMutableAttributedString(string: NSLocalizedString("AboutCredits", value: "Send files between your Mac and Android phone over Wi-Fi or a USB cable.\nNo accounts, no tracking, no data collected.\n\nOpen source under the Apache License 2.0.\nBuilt on Blippy by Grishka. Cable transfer uses adb from the Android SDK.", comment: ""), attributes: base)
+		let credits=NSMutableAttributedString(string: NSLocalizedString("AboutCredits", value: "Send files between your Mac and Android phone over Wi-Fi or a USB cable.\nNo accounts, no tracking, no data collected.\n\nOpen source under the Apache License 2.0.\nBuilt on Blippy by Grishka. Cable transfer uses adb from the Android SDK and libusb.", comment: ""), attributes: base)
 		func link(_ title:String, _ url:URL?){
 			guard let url else {return}
 			var attrs=base

@@ -10,6 +10,7 @@ following third-party software. Full license texts are in the `LICENSES/` folder
 | [SwiftECC](https://github.com/leif-ibsen/SwiftECC) | Elliptic-curve cryptography for the Quick Share handshake | MIT | Leif Ibsen |
 | [BigInt](https://github.com/leif-ibsen/BigInt) | Big-integer math used by SwiftECC | MIT | Leif Ibsen |
 | [ASN1](https://github.com/leif-ibsen/ASN1) | ASN.1 encoding used by SwiftECC | MIT | Leif Ibsen |
+| [libusb](https://libusb.info) | USB access for the `blippy-mtp` helper (File transfer mode); linked statically. Source is downloaded by `scripts/build-mtp.sh`, and the helper's source is in `Helper/` | LGPL-2.1 (`LICENSES/libusb-LGPL-2.1.txt`) | The libusb contributors |
 | Android Debug Bridge (`adb`), from the Android SDK Platform-Tools | Sends files to the phone over a USB cable | Apache 2.0 (components listed in `Vendor/adb-NOTICE.txt`) | The Android Open Source Project / Google LLC |
 
 The generated protocol-buffer sources in `NearbyShare/Protobuf` are produced by the

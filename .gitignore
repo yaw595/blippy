@@ -12,3 +12,7 @@ xcuserdata/
 
 # The adb binary is not committed. Run scripts/fetch-adb.sh to download it.
 Vendor/adb
+
+# The MTP helper is built locally. Run scripts/build-mtp.sh to create it.
+Vendor/blippy-mtp
+Vendor/libusb-COPYING.txt

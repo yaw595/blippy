@@ -111,8 +111,11 @@ struct EndpointInfo{
 	}
 	
 	init?(data:Data){
-		guard data.count>17 else {return nil}
+		guard data.count>=17 else {return nil}
 		let hasName=(data[0] & 0x10)==0
+		if hasName{
+			guard data.count>17 else {return nil}
+		}
 		let deviceNameLength:Int
 		let deviceName:String?
 		if hasName{
@@ -182,6 +185,12 @@ public protocol ShareExtensionDelegate:AnyObject{
 	func transferAccepted()
 	func transferProgress(progress:Double)
 	func transferFinished()
+	/// How many phones are on the network but not showing a name (Quick Share closed, or not set to Everyone).
+	func hiddenDevicesChanged(count:Int)
+}
+
+public extension ShareExtensionDelegate{
+	func hiddenDevicesChanged(count:Int){}
 }
 
 public class NearbyConnectionManager : NSObject, NetServiceDelegate, InboundNearbyConnectionDelegate, OutboundNearbyConnectionDelegate{
@@ -197,6 +206,7 @@ public class NearbyConnectionManager : NSObject, NetServiceDelegate, InboundNear
 	private var discoveryRefCount=0
 	
 	private var browser:NWBrowser?
+	private var hiddenServices=Set<String>()
 	private var rescanTimer:Timer?
 	
 	private var qrCodePublicKey:ECPublicKey?
@@ -289,6 +299,7 @@ public class NearbyConnectionManager : NSObject, NetServiceDelegate, InboundNear
 	public func startDeviceDiscovery(){
 		if discoveryRefCount==0{
 			foundServices.removeAll()
+			setHidden([])
 			makeBrowser()
 			// Safety net: if nothing has turned up, search again every few seconds. A Wi-Fi announcement from
 			// a phone that opened Quick Share a moment ago can be missed (multicast is unreliable on Wi-Fi).
@@ -393,6 +404,10 @@ public class NearbyConnectionManager : NSObject, NetServiceDelegate, InboundNear
 		var deviceInfo:RemoteDeviceInfo?
 		if let _=endpointInfo.name{
 			deviceInfo=addFoundDevice(foundService: &foundService, endpointInfo: endpointInfo, endpointID: endpointID)
+			setHidden(hiddenServices.subtracting([endpointID]))
+		}else if endpointInfo.qrCodeData==nil || qrCodeAdvertisingToken==nil{
+			// On the network, but not showing a name: tell the user so they can open Quick Share on it.
+			setHidden(hiddenServices.union([endpointID]))
 		}
 		
 		if let qrData=endpointInfo.qrCodeData, let _=qrCodeAdvertisingToken{
@@ -411,6 +426,7 @@ public class NearbyConnectionManager : NSObject, NetServiceDelegate, InboundNear
 					let decryptedName=try AES.GCM.open(box, using: qrCodeNameEncryptionKey!, authenticating: qrCodeAdvertisingToken!)
 					guard let name=String.init(data: decryptedName, encoding: .utf8) else {return}
 					endpointInfo.name=name
+					setHidden(hiddenServices.subtracting([endpointID]))
 					let deviceInfo=addFoundDevice(foundService: &foundService, endpointInfo: endpointInfo, endpointID: endpointID)
 					for delegate in shareExtensionDelegates{
 						delegate.startTransferWithQrCode(device: deviceInfo)
@@ -421,6 +437,15 @@ public class NearbyConnectionManager : NSObject, NetServiceDelegate, InboundNear
 #endif
 				}
 			}
+		}
+	}
+	
+	private func setHidden(_ new:Set<String>){
+		guard new != hiddenServices else {return}
+		hiddenServices=new
+		let count=new.count
+		for delegate in shareExtensionDelegates{
+			delegate.hiddenDevicesChanged(count: count)
 		}
 	}
 	
@@ -436,6 +461,7 @@ public class NearbyConnectionManager : NSObject, NetServiceDelegate, InboundNear
 	
 	private func maybeRemoveFoundDevice(service:NWBrowser.Result){
 		guard let endpointID=endpointID(for: service) else {return}
+		setHidden(hiddenServices.subtracting([endpointID]))
 		guard let _=foundServices.removeValue(forKey: endpointID) else {return}
 		for delegate in shareExtensionDelegates {
 			delegate.removeDevice(id: endpointID)

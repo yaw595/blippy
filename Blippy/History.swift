@@ -231,7 +231,7 @@ struct DevicesPage: View {
 			byName[entry.device] = known
 		}
 		for name in nearby.names { byName[name, default: Known(name: name)].onWifi = true }
-		if case .ready(_, let name) = cable.link { byName[name, default: Known(name: name)].onCable = true }
+		if let name = cable.link.readyName { byName[name, default: Known(name: name)].onCable = true }
 		return byName.values.sorted { ($0.onWifi || $0.onCable ? 1 : 0, $0.last ?? .distantPast) > ($1.onWifi || $1.onCable ? 1 : 0, $1.last ?? .distantPast) }
 	}
 

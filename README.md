@@ -40,8 +40,9 @@
 
 - **Wi-Fi, both directions.** Uses Google's Quick Share protocol, so your phone's built-in Quick Share
   sees your Mac. Send from the Finder **Share** menu, drag files onto a phone, or receive from the phone.
-- **USB cable for big files.** Pushes files straight into the phone's **Downloads** folder with `adb`,
-  checks that every file arrived complete, and shows speed and time left.
+- **USB cable for big files, two ways.** With **USB debugging** on, Blippy pushes files into the phone's **Downloads**
+  folder with `adb`. With the phone set to **File transfer** (no developer mode needed) it sends them over MTP
+  instead. Either way any file type works, every file is checked for completeness, and you see speed and time left.
 - **Several phones at once**, with progress for each.
 - **Any kind of file**, including large ones: a single transfer of about **5 GB finished in around 10 minutes**.
 - **Folders** are zipped for you. **File previews**, sounds and notifications tell you what's happening.
@@ -80,7 +81,8 @@ Requires **macOS 14 (Sonoma) or later** and an Android phone with Quick Share (A
 | Send over Wi-Fi | On the phone, open **Quick Share** and tap **Receive**. In Blippy, drop files or click **Choose Files**, then click the phone. |
 | Send from Finder | Right-click a file → **Share → Blippy**. (Enable it once in System Settings → General → Login Items & Extensions → Sharing.) |
 | Receive | On the phone, **Share → Quick Share →** your Mac. Accept in the notification or on the Receive page. Files land in **Downloads**. |
-| Send over cable | Plug in the phone, turn on **USB debugging** (the Cable page shows how), tap **Allow** on the phone, then drop files on the Cable page. |
+| Send over cable | Plug in the phone and unlock it. Either set USB to **File transfer** (swipe down, tap the USB notification), or turn on **USB debugging** and tap **Allow** (the Cable page shows both). Then drop files on the Cable page. |
+| Phone not showing up | Open **Quick Share** on the phone and choose **Everyone** (Samsung: **Anyone nearby**), keep the screen on, and turn off auto-lock while sending. If it stays hidden, Blippy offers a QR code to scan, or the cable. [More](docs/TROUBLESHOOTING.md) |
 
 ## Tested so far
 
@@ -150,7 +152,16 @@ becomes `name (1).ext`. A transfer that goes silent for 90 seconds is marked as 
 
 ### Sending over a USB cable
 
-Quick Share depends on your Wi-Fi, so for very large files Blippy has a second path that doesn't.
+Quick Share depends on your Wi-Fi, so for very large files Blippy has a second path that doesn't. There are two
+ways over the cable, and the Cable page picks the one that works:
+
+- **File transfer (MTP).** Set the phone's USB mode to **File transfer**; no developer mode or USB debugging is needed.
+  Blippy includes a small helper (`blippy-mtp`, built on libusb) that speaks MTP, the protocol phones use in that mode.
+  It finds the phone's storage and its **Download** folder, picks a name that isn't taken, sends the file, and then asks
+  the phone for the file's size to confirm it arrived complete. It sends any file type; folders are zipped first.
+  The phone must be unlocked while it sends. macOS's own camera service sometimes grabs a phone in this mode, so the
+  helper asks it to let go first.
+- **adb (USB debugging).** The faster route when you have developer options on, described next.
 
 1. Blippy includes Google's `adb` (Android Debug Bridge). When the **Cable** page is open it checks every 2 seconds,
    and the moment you plug in or unplug a phone, whether a phone is connected, authorized (**USB debugging** on, and you
@@ -196,7 +207,11 @@ Nothing is sent to any server. Blippy makes no internet connections of its own. 
   Blippy can't wake the phone itself. The QR code is the workaround.
 - It speaks **Quick Share**, not AirDrop, so it's for Android phones. (Google's own Quick Share-to-AirDrop feature
   is limited to newer Pixels and doesn't involve Blippy.)
-- Cable transfer needs **USB debugging**, which is an Android developer option.
+- Cable transfer needs the phone set to **File transfer** (no setup) or **USB debugging** (a developer option, a little
+  faster). The **File transfer** route is new and has not yet been tested on many phones; Samsung phones in particular
+  can be picky, and often pause USB when the screen locks, so turn off auto-lock while sending.
+- A phone that Quick Share lists as **hidden** (Quick Share closed, or visibility not set to Everyone) can't be seen
+  from a Mac. Blippy tells you how many are nearby, opens the QR code after about 25 seconds, and points to the cable.
 - Photos and videos can also be sent to a phone in *Photo transfer* mode through Apple's Image Capture. That path is
   experimental, because Apple has deprecated the API it uses; `adb` is the dependable cable route.
 - Blippy is signed without a paid Apple certificate, so macOS asks you to confirm the first launch
@@ -210,6 +225,7 @@ Requirements: a Mac with **Xcode 26 or later** (it uses the macOS 26 SDK for Liq
 git clone https://github.com/yaw595/blippy.git
 cd blippy
 ./scripts/fetch-adb.sh        # downloads Google's adb into Vendor/ (needed for cable transfer)
+./scripts/build-mtp.sh        # builds the MTP helper (File transfer mode) into Vendor/; downloads libusb source
 open Blippy.xcodeproj          # build and run the "Blippy" scheme
 ```
 
@@ -243,7 +259,7 @@ large files, and a fix for phones that open Quick Share after the Mac is already
 
 Blippy is released under the [Apache License 2.0](LICENSE).
 
-It uses swift-protobuf, SwiftECC and Android's `adb`, in addition to the NearDrop foundation described above.
+It uses swift-protobuf, SwiftECC, Android's `adb` and libusb (for the File transfer route), in addition to the NearDrop foundation described above.
 See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 Android, Quick Share and Pixel are trademarks of Google LLC. Blippy is an independent project and is

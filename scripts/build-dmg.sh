@@ -15,6 +15,7 @@ DERIVED="build-release"
 DMG="dist/$NAME-$VERSION.dmg"
 
 [ -x Vendor/adb ] || ./scripts/fetch-adb.sh
+[ -x Vendor/blippy-mtp ] || ./scripts/build-mtp.sh
 
 echo "==> Building $NAME $VERSION (universal, Release)"
 rm -rf "$DERIVED" dist

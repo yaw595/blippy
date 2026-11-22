@@ -69,6 +69,7 @@ git commit -m "Initial commit"
 
 ```bash
 ./scripts/fetch-adb.sh      # first time only: downloads Google's adb into Vendor/
+./scripts/build-mtp.sh      # first time only: builds the MTP helper (downloads libusb source) into Vendor/
 ./scripts/build-dmg.sh
 ```
 
@@ -124,6 +125,8 @@ Until then, the ad-hoc build is fine for an open-source project.
 
 ## Good to know
 
+- **`Vendor/blippy-mtp` is not committed** either: `scripts/build-mtp.sh` builds it (universal, libusb linked statically,
+  LGPL-2.1: keep `Helper/blippy-mtp.c` and the license text with the app, which the build already does).
 - **`adb` is not committed** (it is 15 MB and Google's). `scripts/fetch-adb.sh` downloads it, and the build
   fails with a clear message if it is missing. The released app includes it, and the licenses are in the app
   under **Help → Open Source Licenses**.

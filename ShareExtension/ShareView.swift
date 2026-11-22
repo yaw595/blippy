@@ -235,6 +235,13 @@ final class ShareModel: ObservableObject {
 	@Published var transfers: [Transfer] = []
 	@Published var showQRCode = false
 	@Published var qrImage: NSImage?
+	/// Phones on the network that aren't showing a name (Quick Share closed or not set to Everyone).
+	@Published var hiddenCount = 0
+	@Published var showHelp = false
+	/// The QR code opens by itself once per session when no phone turns up.
+	var autoQRShown = false
+	/// Set in the main window so the help can jump to the Cable page.
+	var onShowCable: (() -> Void)?
 
 	var onActivate: (Device) -> Void = { _ in }
 	var onToggle: (Device) -> Void = { _ in }
@@ -293,7 +300,7 @@ struct ShareRootView: View {
 				if model.isTransferring {
 					TransferView(model: model)
 				} else if model.devices.isEmpty {
-					SearchingView()
+					SearchingView(model: model)
 				} else {
 					DeviceGrid(model: model)
 				}
@@ -320,6 +327,7 @@ struct ShareRootView: View {
 			return true
 		} isTargeted: { dropTargeted = $0 && model.mode == .window && !model.isTransferring }
 		.sheet(isPresented: $model.showQRCode) { QRCodeSheet(model: model) }
+		.sheet(isPresented: $model.showHelp) { PhoneHelpSheet(model: model) }
 	}
 }
 
@@ -388,30 +396,66 @@ struct PulseRing: View {
 
 /// Inner circle holds the device placeholder; the outer circle pulses.
 private struct SearchingView: View {
+	@ObservedObject var model: ShareModel
 	@State private var needsHelp = false
 
+	/// How long Blippy keeps searching quietly before it shows the QR code and the help buttons. Searching itself never stops.
+	private static let patience: UInt64 = 25
+
+	private var hint: String {
+		if model.hiddenCount == 1 {
+			return NSLocalizedString("HiddenOne", value: "1 phone is nearby but hidden. Open Quick Share on it and choose Everyone, or scan the QR code.", comment: "")
+		}
+		if model.hiddenCount > 1 {
+			return String(format: NSLocalizedString("HiddenMany", value: "%d phones are nearby but hidden. Open Quick Share on one and choose Everyone, or scan the QR code.", comment: ""), model.hiddenCount)
+		}
+		return needsHelp
+			? NSLocalizedString("SearchingHelp", value: "Same Wi-Fi? Phone unlocked, with Quick Share open?", comment: "")
+			: NSLocalizedString("SearchingHint", value: "Tap Receive on your phone", comment: "")
+	}
+
 	var body: some View {
-		VStack(spacing: 22) {
+		VStack(spacing: 18) {
 			ZStack {
 				PulseRing(size: 150)
 				Circle().fill(Palette.accent.opacity(0.2)).frame(width: 104, height: 104)
 				PhoneIcon(height: 54).opacity(0.5)
 			}
-			.frame(width: 200, height: 200)
+			.frame(width: 200, height: 170)
 
 			VStack(spacing: 4) {
 				Text(NSLocalizedString("Searching", value: "Looking for devices", comment: "")).font(.system(size: 15, weight: .semibold))
-				Text(needsHelp
-					 ? NSLocalizedString("SearchingHelp", value: "Same Wi-Fi? Phone on Receive?", comment: "")
-					 : NSLocalizedString("SearchingHint", value: "Tap Receive on your phone", comment: ""))
-					.font(.system(size: 12)).foregroundStyle(needsHelp ? Palette.warning : .secondary)
+				Text(hint)
+					.font(.system(size: 12))
+					.foregroundStyle(needsHelp || model.hiddenCount > 0 ? Palette.warning : .secondary)
+					.multilineTextAlignment(.center)
+					.frame(maxWidth: 320)
+					.fixedSize(horizontal: false, vertical: true)
+			}
+
+			if needsHelp || model.hiddenCount > 0 {
+				HStack(spacing: 8) {
+					Button { model.onShowQRCode() } label: { Label(NSLocalizedString("ShowQR", value: "QR code", comment: ""), systemImage: "qrcode") }
+						.buttonStyle(GlassButtonStyle(prominent: true))
+					if let cable = model.onShowCable {
+						Button { cable() } label: { Label(NSLocalizedString("UseCable", value: "Use cable", comment: ""), systemImage: "cable.connector") }
+							.buttonStyle(GlassButtonStyle())
+					}
+					Button { model.showHelp = true } label: { Label(NSLocalizedString("HelpButton", value: "Help", comment: ""), systemImage: "questionmark.circle") }
+						.buttonStyle(GlassButtonStyle())
+				}
 			}
 		}
 		.task {
-			try? await Task.sleep(nanoseconds: 15_000_000_000)
+			try? await Task.sleep(nanoseconds: Self.patience * 1_000_000_000)
 			needsHelp = true
+			// Still nothing after the wait: open the QR code, which works even when the phone is hidden.
+			if !model.autoQRShown, model.hasFiles || model.mode == .shareSheet, !model.showQRCode {
+				model.autoQRShown = true
+				model.onShowQRCode()
+			}
 		}
-		.accessibilityElement(children: .combine)
+		.accessibilityElement(children: .contain)
 	}
 }
 
@@ -643,7 +687,7 @@ private struct QRCodeSheet: View {
 		VStack(spacing: 18) {
 			VStack(spacing: 6) {
 				Text(NSLocalizedString("QrTitle", value: "Scan with your phone", comment: "")).font(.system(size: 18, weight: .semibold))
-				Text(NSLocalizedString("QrBody", value: "Point the camera at this code. Set your phone to be visible to everyone first.", comment: ""))
+				Text(NSLocalizedString("QrBody", value: "Open Quick Share on your phone and scan this code (the camera works too). It works even when the phone is hidden.", comment: ""))
 					.font(.system(size: 12)).foregroundStyle(.secondary).multilineTextAlignment(.center)
 					.fixedSize(horizontal: false, vertical: true)
 			}
@@ -660,6 +704,44 @@ private struct QRCodeSheet: View {
 		}
 		.padding(28)
 		.frame(width: 380)
+		.background(Color(nsColor: .windowBackgroundColor))
+	}
+}
+
+// MARK: - "Can't see your phone?" help
+
+private struct PhoneHelpSheet: View {
+	@ObservedObject var model: ShareModel
+
+	private func row(_ number: String, _ text: String) -> some View {
+		HStack(alignment: .top, spacing: 12) {
+			Text(number).font(.system(size: 12, weight: .semibold)).frame(width: 24, height: 24).glass(Circle())
+			Text(text).font(.system(size: 13)).fixedSize(horizontal: false, vertical: true)
+		}
+	}
+
+	var body: some View {
+		VStack(alignment: .leading, spacing: 16) {
+			Text(NSLocalizedString("HelpTitle", value: "Can’t see your phone?", comment: "")).font(.system(size: 18, weight: .semibold))
+			VStack(alignment: .leading, spacing: 10) {
+				row("1", NSLocalizedString("HelpWifi", value: "Put the Mac and the phone on the same Wi-Fi (not a guest network, no VPN).", comment: ""))
+				row("2", NSLocalizedString("HelpAwake", value: "Unlock the phone and keep the screen on. If it locks quickly, turn off auto-lock or set a long screen timeout (Settings → Display → Screen timeout). Samsung also stops sharing when the screen locks.", comment: ""))
+				row("3", NSLocalizedString("HelpEveryone", value: "Open Quick Share and set “Who can share with you” to Everyone (Samsung: Anyone nearby, which lasts only 10 minutes). Keep that screen open.", comment: ""))
+				row("4", NSLocalizedString("HelpBluetooth", value: "Turn on Bluetooth and Location on the phone.", comment: ""))
+			}
+			Text(NSLocalizedString("HelpStill", value: "Still not there? Scan the QR code, or use a USB cable.", comment: ""))
+				.font(.system(size: 12)).foregroundStyle(.secondary)
+			HStack(spacing: 8) {
+				Button(NSLocalizedString("ShowQR", value: "QR code", comment: "")) { model.showHelp = false; model.onShowQRCode() }.buttonStyle(GlassButtonStyle(prominent: true))
+				if let cable = model.onShowCable {
+					Button(NSLocalizedString("UseCable", value: "Use cable", comment: "")) { model.showHelp = false; cable() }.buttonStyle(GlassButtonStyle())
+				}
+				Spacer()
+				Button(NSLocalizedString("Done", value: "Done", comment: "")) { model.showHelp = false }.buttonStyle(GlassButtonStyle()).keyboardShortcut(.cancelAction)
+			}
+		}
+		.padding(26)
+		.frame(width: 420)
 		.background(Color(nsColor: .windowBackgroundColor))
 	}
 }

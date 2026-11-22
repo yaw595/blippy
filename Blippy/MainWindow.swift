@@ -95,6 +95,7 @@ final class MainWindowController: NSWindowController, NSWindowDelegate {
 		session.chooseFiles = { [weak self] completion in
 			self?.presentOpenPanel(completion: completion)
 		}
+		session.model.onShowCable = { [weak self] in self?.nav.page = .cable }
 		let hosting = NSHostingView(rootView: AppRoot(model: session.model, nav: nav))
 		hosting.sizingOptions = [] // the window decides its size, not the SwiftUI content (otherwise full screen can be capped)
 		window?.contentView = hosting
