@@ -22,6 +22,14 @@
   <a href="https://github.com/yaw595/blippy/releases">All releases</a>
 </p>
 
+<p align="center">
+  <a href="docs/media/demo.mp4">
+    <img src="docs/images/demo.gif" width="760" alt="Blippy demo: sending a file to a phone. Click to watch the full 80-second video.">
+  </a>
+  <br>
+  <sub>▶ <a href="docs/media/demo.mp4">Watch the full 80-second demo</a>: Wi-Fi send, cable transfer, history</sub>
+</p>
+
 ---
 
 ## What it does
@@ -46,11 +54,6 @@
 <p align="center">
   <img src="docs/images/settings.png" width="49%" alt="Settings: Light, Dark or System appearance">
 </p>
-
-<p align="center">
-  <b><a href="docs/media/demo.mp4">▶ Watch the 80-second demo</a></b> (Send, Receive, Cable and History in action)
-</p>
-
 > Built and tested with a Pixel 6 Pro and a recent Mac. Reports from other phones and Macs are very welcome.
 
 ## Install
