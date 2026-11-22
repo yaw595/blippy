@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="68" viewBox="0 0 320 68" role="img" aria-label="Download Blippy for Mac">
+  <title>Download for Mac</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4F8DF5"/>
+      <stop offset="1" stop-color="#3D7DF2"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="318" height="66" rx="16" fill="url(#bg)" stroke="#2F66D0" stroke-width="1"/>
+  <!-- download arrow -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M44 20 V40"/>
+    <path d="M35 32 L44 41 L53 32"/>
+    <path d="M34 48 H54"/>
+  </g>
+  <text x="72" y="31" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" font-weight="700">Download for Mac</text>
+  <text x="72" y="50" fill="#FFFFFF" fill-opacity="0.85" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Free · macOS 14 or later</text>
+</svg>

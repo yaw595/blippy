@@ -10,10 +10,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/yaw595/blippy/releases/latest"><b>Download for Mac</b></a> ·
+  <a href="https://github.com/yaw595/blippy/releases/latest">
+    <img src="docs/images/download-for-mac.svg" width="320" alt="Download Blippy for Mac">
+  </a>
+</p>
+
+<p align="center">
   <a href="docs/INSTALL.md">Install help</a> ·
   <a href="docs/TROUBLESHOOTING.md">Troubleshooting</a> ·
-  <a href="PRIVACY.md">Privacy</a>
+  <a href="PRIVACY.md">Privacy</a> ·
+  <a href="https://github.com/yaw595/blippy/releases">All releases</a>
 </p>
 
 ---
