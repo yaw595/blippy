@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="68" viewBox="0 0 320 68" role="img" aria-label="Buy me a coffee">
+  <title>Buy me a coffee</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFDF6B"/>
+      <stop offset="1" stop-color="#FFC93C"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="318" height="66" rx="16" fill="url(#bg)" stroke="#D99A00" stroke-width="1"/>
+  <!-- coffee cup -->
+  <g fill="none" stroke="#3B2A00" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M33 30 H55 V41 a9 9 0 0 1 -9 9 H42 a9 9 0 0 1 -9 -9 Z"/>
+    <path d="M55 33 H58 a5 5 0 0 1 0 10 H55"/>
+    <path d="M40 18 q-3 4 0 8"/>
+    <path d="M48 18 q-3 4 0 8"/>
+  </g>
+  <text x="72" y="31" fill="#3B2A00" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" font-weight="700">Buy me a coffee</text>
+  <text x="72" y="50" fill="#3B2A00" fill-opacity="0.8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">Optional · helps keep Blippy free</text>
+</svg>

@@ -13,6 +13,10 @@
   <a href="https://github.com/yaw595/blippy/releases/latest">
     <img src="docs/images/download-for-mac.svg" width="320" alt="Download Blippy for Mac">
   </a>
+  &nbsp;&nbsp;
+  <a href="https://paystack.shop/pay/igugouqwlf">
+    <img src="docs/images/buy-me-a-coffee.svg" width="320" alt="Buy me a coffee (optional)">
+  </a>
 </p>
 
 <p align="center">
