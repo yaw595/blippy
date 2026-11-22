@@ -1,4 +1,4 @@
-// Generates NearDrop's icons (full-color glass icon + monochrome outline) as PNGs.
+// Generates Blippy's icons (full-color glass icon + monochrome outline) as PNGs.
 // Usage: swift Design/make_icons.swift <output-root>
 //   <output-root> is the quickshare-mac folder; assets are written into the .xcassets folders,
 //   and previews go to <output-root>/Design/previews/.
@@ -241,12 +241,12 @@ let appIconFiles: [(String, Int)] = [
 ]
 for (name, px) in appIconFiles {
 	write(makePNG(pixels: px) { drawFullIcon($0, margin: 100, shadow: true) },
-		  to: "NearDrop/Assets.xcassets/AppIcon.appiconset/\(name)")
+		  to: "Blippy/Assets.xcassets/AppIcon.appiconset/\(name)")
 }
 
 // Menu bar / Finder-style outline (template): 18pt at 1x, 2x, 3x
 for (name, px) in [("NearbyShare.png", 18), ("NearbyShare@2x.png", 36), ("NearbyShare@3x.png", 54)] {
-	write(makePNG(pixels: px) { drawOutline($0, ring: false) }, to: "NearDrop/Assets.xcassets/MenuBarIcon.imageset/\(name)")
+	write(makePNG(pixels: px) { drawOutline($0, ring: false) }, to: "Blippy/Assets.xcassets/MenuBarIcon.imageset/\(name)")
 }
 
 // Share extension: same AppIcon (its own copy, so the Share menu shows it) + in-window glyph

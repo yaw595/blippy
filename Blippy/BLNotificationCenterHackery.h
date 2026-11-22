@@ -1,6 +1,6 @@
 //
-//  NDNotificationCenterHackery.h
-//  NearDrop
+//  BLNotificationCenterHackery.h
+//  Blippy
 //
 //  Created by Grishka on 10.04.2023.
 //
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NDNotificationCenterHackery : NSObject
+@interface BLNotificationCenterHackery : NSObject
 
 + (void)removeDefaultAction:(UNMutableNotificationContent*) content;
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 //  History.swift
-//  NearDrop
+//  Blippy
 //
 //  History (what was sent and received, kept on disk) and Devices (who you've exchanged files with,
 //  and who is reachable right now).

@@ -1,13 +1,13 @@
 //
-//  NDNotificationCenterHackery.m
-//  NearDrop
+//  BLNotificationCenterHackery.m
+//  Blippy
 //
 //  Created by Grishka on 10.04.2023.
 //
 
 #import <UserNotifications/UserNotifications.h>
 #import <AppKit/AppKit.h>
-#import "NDNotificationCenterHackery.h"
+#import "BLNotificationCenterHackery.h"
 
 @interface UNMutableNotificationCategory : UNNotificationCategory
 @property(copy) NSString *actionsMenuTitle;
@@ -23,7 +23,7 @@
 + (id)iconNamed:(id)arg1;
 @end
 
-@interface UNMutableNotificationContent (NDPrivateAPIs)
+@interface UNMutableNotificationContent (BLPrivateAPIs)
 @property BOOL hasDefaultAction;
 @property(copy) NSString *defaultActionTitle;
 @property(copy) NSString *header;
@@ -33,7 +33,7 @@
 @property(copy) UNNotificationIcon *icon;
 @end
 
-@implementation NDNotificationCenterHackery
+@implementation BLNotificationCenterHackery
 
 + (void)removeDefaultAction:(UNMutableNotificationContent*) content{
 	content.hasDefaultAction=false;

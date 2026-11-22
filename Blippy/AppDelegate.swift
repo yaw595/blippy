@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  NearDrop
+//  Blippy
 //
 //  Created by Grishka on 08.04.2023.
 //
@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 		let menu=NSMenu()
-		let openItem=NSMenuItem(title: NSLocalizedString("OpenNearDrop", value: "Open Blippy…", comment: ""), action: #selector(openMainWindow(_:)), keyEquivalent: "o")
+		let openItem=NSMenuItem(title: NSLocalizedString("OpenBlippy", value: "Open Blippy…", comment: ""), action: #selector(openMainWindow(_:)), keyEquivalent: "o")
 		openItem.target=self
 		menu.addItem(openItem)
 		let downloadsItem=NSMenuItem(title: NSLocalizedString("ShowDownloads", value: "Show Received Files", comment: ""), action: #selector(showDownloads(_:)), keyEquivalent: "")
@@ -81,7 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 		NearbyConnectionManager.shared.becomeVisible()
 
 		didFinishLaunching=true
-		// Open the window when the user launches NearDrop (not when it starts at login),
+		// Open the window when the user launches Blippy (not when it starts at login),
 		// or when files were dropped onto the app to launch it.
 		if !pendingOpenURLs.isEmpty || !launchedAsLoginItem{
 			mainWindow.show(files: pendingOpenURLs)
@@ -94,13 +94,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 	}
 
 	func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-		// Clicking NearDrop again (Finder sidebar, Applications, Spotlight) brings up the window.
+		// Clicking Blippy again (Finder sidebar, Applications, Spotlight) brings up the window.
 		statusItem?.isVisible=true
 		mainWindow.show()
 		return true
 	}
 
-	/// Files dropped onto NearDrop (e.g. its Finder sidebar item) or opened with it.
+	/// Files dropped onto Blippy (e.g. its Finder sidebar item) or opened with it.
 	func application(_ application: NSApplication, open urls: [URL]) {
 		let files=urls.filter { $0.isFileURL }
 		guard !files.isEmpty else {return}
@@ -133,7 +133,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 		let paragraph=NSMutableParagraphStyle()
 		paragraph.alignment = .center
 		let base:[NSAttributedString.Key:Any]=[.font: NSFont.systemFont(ofSize: 11), .foregroundColor: NSColor.secondaryLabelColor, .paragraphStyle: paragraph]
-		let credits=NSMutableAttributedString(string: NSLocalizedString("AboutCredits", value: "Send files between your Mac and Android phone over Wi-Fi or a USB cable.\nNo accounts, no tracking, no data collected.\n\nOpen source under the Apache License 2.0.\nBuilt on NearDrop by Grishka. Cable transfer uses adb from the Android SDK.", comment: ""), attributes: base)
+		let credits=NSMutableAttributedString(string: NSLocalizedString("AboutCredits", value: "Send files between your Mac and Android phone over Wi-Fi or a USB cable.\nNo accounts, no tracking, no data collected.\n\nOpen source under the Apache License 2.0.\nBuilt on Blippy by Grishka. Cable transfer uses adb from the Android SDK.", comment: ""), attributes: base)
 		func link(_ title:String, _ url:URL?){
 			guard let url else {return}
 			var attrs=base
@@ -200,7 +200,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 		}
 	}
 
-	/// Global shortcut ⌃⌥N: open NearDrop on the current Space.
+	/// Global shortcut ⌃⌥N: open Blippy on the current Space.
 	private func registerHotKey(){
 		var spec=EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
 		InstallEventHandler(GetApplicationEventTarget(), { _, _, context in
@@ -274,7 +274,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 		notificationContent.categoryIdentifier="INCOMING_TRANSFERS"
 		notificationContent.userInfo=["transferID": transfer.id]
 		if #available(macOS 11.0, *){
-			NDNotificationCenterHackery.removeDefaultAction(notificationContent)
+			BLNotificationCenterHackery.removeDefaultAction(notificationContent)
 		}
 		let notificationReq=UNNotificationRequest(identifier: "transfer_"+transfer.id, content: notificationContent, trigger: nil)
 		UNUserNotificationCenter.current().add(notificationReq)

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 //  AppWindow.swift
-//  NearDrop
+//  Blippy
 //
 //  The app's window: a sidebar with Send and Received (working) plus placeholder pages
 //  for what's coming (cable transfer, history, devices, settings).

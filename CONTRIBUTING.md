@@ -14,14 +14,14 @@ Thanks for helping! Bug reports, fixes, translations, ideas and testing on other
 ```bash
 git clone https://github.com/yaw595/blippy.git && cd blippy
 ./scripts/fetch-adb.sh
-open NearDrop.xcodeproj
+open Blippy.xcodeproj
 ```
 
-You need Xcode 26 or later (developed with a recent Xcode beta). To run locally without an Apple developer account, build the **NearDrop**
+You need Xcode 26 or later (developed with a recent Xcode beta). To run locally without an Apple developer account, build the **Blippy**
 scheme with *Sign to Run Locally*, or from the command line:
 
 ```bash
-xcodebuild -project NearDrop.xcodeproj -scheme NearDrop -configuration Debug \
+xcodebuild -project Blippy.xcodeproj -scheme Blippy -configuration Debug \
   -derivedDataPath build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="-" DEVELOPMENT_TEAM="" build
 ```
 
@@ -31,7 +31,7 @@ xcodebuild -project NearDrop.xcodeproj -scheme NearDrop -configuration Debug \
 |---|---|
 | `NearbyShare/` | The Quick Share protocol (framework). Based on NearDrop. See `docs/PROTOCOL.md`. |
 | `ShareExtension/` | The Finder Share popup, and the UI + send logic shared with the app (`ShareView.swift`, `SendSession.swift`). |
-| `NearDrop/` | The app: window and pages (`AppWindow.swift`), menu bar (`AppMenu.swift`), cable transfer (`Cable.swift`), history and devices (`History.swift`). |
+| `Blippy/` | The app: window and pages (`AppWindow.swift`), menu bar (`AppMenu.swift`), cable transfer (`Cable.swift`), history and devices (`History.swift`). |
 | `Design/` | The icon generator (`make_icons.swift`) and design assets. |
 | `scripts/` | `fetch-adb.sh`, `build-dmg.sh`, `set-identity.sh`. |
 | `docs/` | Install and troubleshooting guides, protocol notes. |

@@ -6,6 +6,10 @@ All notable changes to Blippy are listed here. The format follows
 
 ## [0.1.0] - First public release
 
+### Changed
+- The Xcode project, target, scheme, source folder, module and code identifiers are now named Blippy (they used the old NearDrop names). NearDrop is still credited as the project Blippy grew out of.
+- The README now explains how Blippy works: discovery, the encrypted handshake and PIN, chunked sending, the cable path, what is stored and the limits.
+
 ### Fixed
 - A phone that opens Quick Share *after* Blippy is already searching is now found. Blippy reacts when a phone adds its details a moment after announcing itself, and searches again every few seconds while nothing is found.
 

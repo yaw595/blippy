@@ -32,7 +32,7 @@ final class SendSession: NSObject, ShareExtensionDelegate {
 	private var reported = false
 	private var canceledByUser = false
 
-	private static let lastDeviceKey = "NearDrop.lastDevice"
+	private static let lastDeviceKey = "Blippy.lastDevice"
 
 	/// Builds the QR code image for a Quick Share URL.
 	var makeQRImage: (String) -> NSImage? = SendSession.plainQRImage
@@ -111,7 +111,7 @@ final class SendSession: NSObject, ShareExtensionDelegate {
 		}
 		model.notice = NSLocalizedString("Zipping", value: "Zipping folder…", comment: "")
 		DispatchQueue.global(qos: .userInitiated).async {
-			let dir = FileManager.default.temporaryDirectory.appendingPathComponent("NearDrop-\(UUID().uuidString)")
+			let dir = FileManager.default.temporaryDirectory.appendingPathComponent("Blippy-\(UUID().uuidString)")
 			let zips = folders.compactMap { Self.zip($0, into: dir) }
 			DispatchQueue.main.async {
 				self.tempDirs.append(dir)

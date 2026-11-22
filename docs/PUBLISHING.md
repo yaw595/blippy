@@ -4,34 +4,31 @@ A checklist for the first release and for every release after it.
 
 ## One-time setup
 
-### 1. Put in your identity
+### 1. Your identity (forks only)
+
+This repository is already set up for its maintainer (GitHub `yaw595`, bundle ID `io.github.yaw595.Blippy`). If you
+fork Blippy to publish your own build, replace that identity first, and **do it before building a release**, so
+your app doesn't share an ID with the original:
 
 ```bash
-scripts/set-identity.sh --github YOUR_USERNAME --coffee https://buymeacoffee.com/yourname
+scripts/set-identity.sh --github YOUR_USERNAME --coffee https://example.com/your-support-link
 ```
 
-This fills in your GitHub username, your Buy Me a Coffee link and the bundle identifier
-(`io.github.<username>.Blippy`, with `.ShareExtension` for the Finder extension) everywhere.
-**Do this before building the release.** The bundle ID must not stay `me.grishka.NearDrop`, because that
-belongs to the original NearDrop app and the two would collide on a user's Mac. Skip `--coffee` to hide the
+It updates the GitHub name and support link in the app and the docs, and the bundle identifier
+(`io.github.<username>.Blippy`, with `.ShareExtension` for the Finder extension). Leave out `--coffee` to hide the
 support section in the app.
 
-### 2. Make a clean repository
+### 2. A clean repository
 
-The project folder still contains a `.git` folder with NearDrop's old history and its remote. Replace it
-with your own:
+If you start from a copy of the folder, remove any old `.git` folder and start your own history:
 
 ```bash
-cd quickshare-mac
 rm -rf .git
 git init -b main
 git add .
 git status          # check that build/, dist/ and Vendor/adb are NOT listed
 git commit -m "Initial commit"
 ```
-
-(You may rename the folder to `blippy` first.) Optional: keep the credit to NearDrop's author in your
-README and NOTICE, which are already there.
 
 ### 3. Create the GitHub repository
 
@@ -64,7 +61,7 @@ README and NOTICE, which are already there.
 
 ### 1. Version and changelog
 
-- Edit `MARKETING_VERSION` in `NearDrop.xcodeproj/project.pbxproj` (or in Xcode: target → General → Version)
+- Edit `MARKETING_VERSION` in `Blippy.xcodeproj/project.pbxproj` (or in Xcode: target → General → Version)
   and bump `CURRENT_PROJECT_VERSION`.
 - Move the notes in `CHANGELOG.md` under a new version heading.
 

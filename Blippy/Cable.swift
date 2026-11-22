@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 //  Cable.swift
-//  NearDrop
+//  Blippy
 //
 //  Sending over USB. Main path: the bundled `adb` pushes files to /sdcard/Download on the phone,
 //  checks the size afterwards, and asks the phone to index the file.

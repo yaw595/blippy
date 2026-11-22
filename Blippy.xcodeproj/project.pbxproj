@@ -22,8 +22,8 @@
 		697DE0031E4600A100B4749C /* AppMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697DE0021E4600A100B4749C /* AppMenu.swift */; };
 		697DDF132E44AAFB00B4749C /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 697DDF122E44AAFB00B4749C /* Localizable.xcstrings */; };
 		697DDF152E44AAFB00B4749C /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 697DDF142E44AAFB00B4749C /* Localizable.xcstrings */; };
-		697DDF172E44AAFB00B4749C /* NearDrop-InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 697DDF162E44AAFB00B4749C /* NearDrop-InfoPlist.xcstrings */; };
-		698DFB0329E362140064F247 /* NDNotificationCenterHackery.m in Sources */ = {isa = PBXBuildFile; fileRef = 698DFB0229E362140064F247 /* NDNotificationCenterHackery.m */; };
+		697DDF172E44AAFB00B4749C /* Blippy-InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 697DDF162E44AAFB00B4749C /* Blippy-InfoPlist.xcstrings */; };
+		698DFB0329E362140064F247 /* BLNotificationCenterHackery.m in Sources */ = {isa = PBXBuildFile; fileRef = 698DFB0229E362140064F247 /* BLNotificationCenterHackery.m */; };
 		699B03452AB5FBA300E0D718 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 699B03442AB5FBA300E0D718 /* Assets.xcassets */; };
 		699DEBA62AB0573200115D22 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699DEBA52AB0573200115D22 /* ShareViewController.swift */; };
 		699DEBAE2AB0573200115D22 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 699DEBA12AB0573200115D22 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -132,13 +132,13 @@
 		697DE0021E4600A100B4749C /* AppMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMenu.swift; sourceTree = "<group>"; };
 		697DDF122E44AAFB00B4749C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		697DDF142E44AAFB00B4749C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		697DDF162E44AAFB00B4749C /* NearDrop-InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = "NearDrop-InfoPlist.xcstrings"; path = "NearDrop/NearDrop-InfoPlist.xcstrings"; sourceTree = "<group>"; };
+		697DDF162E44AAFB00B4749C /* Blippy-InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = "Blippy-InfoPlist.xcstrings"; path = "Blippy/Blippy-InfoPlist.xcstrings"; sourceTree = "<group>"; };
 		698DFAE529E2F91A0064F247 /* NearbyConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyConnection.swift; sourceTree = "<group>"; };
 		698DFAED29E353220064F247 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		698DFAEF29E353220064F247 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
-		698DFB0029E362140064F247 /* NearDrop-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NearDrop-Bridging-Header.h"; sourceTree = "<group>"; };
-		698DFB0129E362140064F247 /* NDNotificationCenterHackery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NDNotificationCenterHackery.h; sourceTree = "<group>"; };
-		698DFB0229E362140064F247 /* NDNotificationCenterHackery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NDNotificationCenterHackery.m; sourceTree = "<group>"; };
+		698DFB0029E362140064F247 /* Blippy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Blippy-Bridging-Header.h"; sourceTree = "<group>"; };
+		698DFB0129E362140064F247 /* BLNotificationCenterHackery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLNotificationCenterHackery.h; sourceTree = "<group>"; };
+		698DFB0229E362140064F247 /* BLNotificationCenterHackery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLNotificationCenterHackery.m; sourceTree = "<group>"; };
 		699B03442AB5FBA300E0D718 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		699DEBA12AB0573200115D22 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		699DEBA52AB0573200115D22 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -146,10 +146,10 @@
 		699DEBAB2AB0573200115D22 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 		69B5994C30598C1300449F58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		69D2C32E29E7898C00EC7E30 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
-		69DA9A0E29E0BF5100A442DA /* NearDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NearDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		69DA9A0E29E0BF5100A442DA /* Blippy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blippy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69DA9A1129E0BF5100A442DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		69DA9A1329E0BF5200A442DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		69DA9A1829E0BF5200A442DA /* NearDrop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NearDrop.entitlements; sourceTree = "<group>"; };
+		69DA9A1829E0BF5200A442DA /* Blippy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Blippy.entitlements; sourceTree = "<group>"; };
 		69DA9A1E29E0C0B300A442DA /* NearbyConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyConnectionManager.swift; sourceTree = "<group>"; };
 		69DA9A2029E0CC4E00A442DA /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
 		69DA9A2229E17F0400A442DA /* InboundNearbyConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboundNearbyConnection.swift; sourceTree = "<group>"; };
@@ -217,8 +217,8 @@
 		69DA9A0529E0BF5100A442DA = {
 			isa = PBXGroup;
 			children = (
-				697DDF162E44AAFB00B4749C /* NearDrop-InfoPlist.xcstrings */,
-				69DA9A1029E0BF5100A442DA /* NearDrop */,
+				697DDF162E44AAFB00B4749C /* Blippy-InfoPlist.xcstrings */,
+				69DA9A1029E0BF5100A442DA /* Blippy */,
 				699DEBA22AB0573200115D22 /* ShareExtension */,
 				69DCF4822AB70D0600CBE2CC /* NearbyShare */,
 				698DFAEC29E353220064F247 /* Frameworks */,
@@ -229,14 +229,14 @@
 		69DA9A0F29E0BF5100A442DA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				69DA9A0E29E0BF5100A442DA /* NearDrop.app */,
+				69DA9A0E29E0BF5100A442DA /* Blippy.app */,
 				699DEBA12AB0573200115D22 /* ShareExtension.appex */,
 				69DCF4812AB70D0600CBE2CC /* libNearbyShare.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		69DA9A1029E0BF5100A442DA /* NearDrop */ = {
+		69DA9A1029E0BF5100A442DA /* Blippy */ = {
 			isa = PBXGroup;
 			children = (
 				69B5994C30598C1300449F58 /* Info.plist */,
@@ -249,13 +249,13 @@
 				697DE0021E4600A100B4749C /* AppMenu.swift */,
 				69DA9A1329E0BF5200A442DA /* Assets.xcassets */,
 				697DDF122E44AAFB00B4749C /* Localizable.xcstrings */,
-				698DFB0129E362140064F247 /* NDNotificationCenterHackery.h */,
-				698DFB0229E362140064F247 /* NDNotificationCenterHackery.m */,
-				69DA9A1829E0BF5200A442DA /* NearDrop.entitlements */,
-				698DFB0029E362140064F247 /* NearDrop-Bridging-Header.h */,
+				698DFB0129E362140064F247 /* BLNotificationCenterHackery.h */,
+				698DFB0229E362140064F247 /* BLNotificationCenterHackery.m */,
+				69DA9A1829E0BF5200A442DA /* Blippy.entitlements */,
+				698DFB0029E362140064F247 /* Blippy-Bridging-Header.h */,
 				69D2C32E29E7898C00EC7E30 /* MainMenu.xib */,
 			);
-			path = NearDrop;
+			path = Blippy;
 			sourceTree = "<group>";
 		};
 		69DA9A2729E18CB500A442DA /* Protobuf */ = {
@@ -318,9 +318,9 @@
 			productReference = 699DEBA12AB0573200115D22 /* ShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		69DA9A0D29E0BF5100A442DA /* NearDrop */ = {
+		69DA9A0D29E0BF5100A442DA /* Blippy */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 69DA9A1B29E0BF5200A442DA /* Build configuration list for PBXNativeTarget "NearDrop" */;
+			buildConfigurationList = 69DA9A1B29E0BF5200A442DA /* Build configuration list for PBXNativeTarget "Blippy" */;
 			buildPhases = (
 				69DA9A0A29E0BF5100A442DA /* Sources */,
 				69DA9A0B29E0BF5100A442DA /* Frameworks */,
@@ -336,11 +336,11 @@
 				699DEBAD2AB0573200115D22 /* PBXTargetDependency */,
 				69DCF4972AB8BF7B00CBE2CC /* PBXTargetDependency */,
 			);
-			name = NearDrop;
+			name = Blippy;
 			packageProductDependencies = (
 			);
-			productName = NearDrop;
-			productReference = 69DA9A0E29E0BF5100A442DA /* NearDrop.app */;
+			productName = Blippy;
+			productReference = 69DA9A0E29E0BF5100A442DA /* Blippy.app */;
 			productType = "com.apple.product-type.application";
 		};
 		69DCF4802AB70D0600CBE2CC /* NearbyShare */ = {
@@ -386,7 +386,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 69DA9A0929E0BF5100A442DA /* Build configuration list for PBXProject "NearDrop" */;
+			buildConfigurationList = 69DA9A0929E0BF5100A442DA /* Build configuration list for PBXProject "Blippy" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -420,7 +420,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				69DA9A0D29E0BF5100A442DA /* NearDrop */,
+				69DA9A0D29E0BF5100A442DA /* Blippy */,
 				699DEBA02AB0573200115D22 /* ShareExtension */,
 				69DCF4802AB70D0600CBE2CC /* NearbyShare */,
 			);
@@ -443,7 +443,7 @@
 			files = (
 				69DA9A1429E0BF5200A442DA /* Assets.xcassets in Resources */,
 				697DDF132E44AAFB00B4749C /* Localizable.xcstrings in Resources */,
-				697DDF172E44AAFB00B4749C /* NearDrop-InfoPlist.xcstrings in Resources */,
+				697DDF172E44AAFB00B4749C /* Blippy-InfoPlist.xcstrings in Resources */,
 				69D2C32F29E7898C00EC7E30 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -496,7 +496,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				698DFB0329E362140064F247 /* NDNotificationCenterHackery.m in Sources */,
+				698DFB0329E362140064F247 /* BLNotificationCenterHackery.m in Sources */,
 				69DA9A1229E0BF5100A442DA /* AppDelegate.swift in Sources */,
 				697DDFA22E4600A100B4749C /* ShareView.swift in Sources */,
 				697DDFB22E4600A100B4749C /* SendSession.swift in Sources */,
@@ -733,7 +733,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = NearDrop/NearDrop.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Blippy/Blippy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -741,7 +741,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NearDrop/Info.plist;
+				INFOPLIST_FILE = Blippy/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Blippy contributors. Licensed under the Apache License, Version 2.0.";
@@ -755,12 +755,12 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.yaw595.Blippy;
-				PRODUCT_MODULE_NAME = NearDrop;
+				PRODUCT_MODULE_NAME = Blippy;
 				PRODUCT_NAME = Blippy;
 				INFOPLIST_KEY_CFBundleDisplayName = Blippy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "NearDrop/NearDrop-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Blippy/Blippy-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -773,7 +773,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = NearDrop/NearDrop.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Blippy/Blippy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -781,7 +781,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NearDrop/Info.plist;
+				INFOPLIST_FILE = Blippy/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_LSUIElement = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Blippy contributors. Licensed under the Apache License, Version 2.0.";
@@ -795,12 +795,12 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.yaw595.Blippy;
-				PRODUCT_MODULE_NAME = NearDrop;
+				PRODUCT_MODULE_NAME = Blippy;
 				PRODUCT_NAME = Blippy;
 				INFOPLIST_KEY_CFBundleDisplayName = Blippy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "NearDrop/NearDrop-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Blippy/Blippy-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -849,7 +849,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		69DA9A0929E0BF5100A442DA /* Build configuration list for PBXProject "NearDrop" */ = {
+		69DA9A0929E0BF5100A442DA /* Build configuration list for PBXProject "Blippy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				69DA9A1929E0BF5200A442DA /* Debug */,
@@ -858,7 +858,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		69DA9A1B29E0BF5200A442DA /* Build configuration list for PBXNativeTarget "NearDrop" */ = {
+		69DA9A1B29E0BF5200A442DA /* Build configuration list for PBXNativeTarget "Blippy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				69DA9A1C29E0BF5200A442DA /* Debug */,

@@ -89,3 +89,6 @@ App ends up in `build/Build/Products/Debug/NearDrop.app`. First run: right-click
 - Verified on screen (computer-use screenshots of the real window): Light, Dark and System; all six pages navigate; Settings shows Appearance + support card. The `.toolbar(removing: .sidebarToggle)` call does not remove the system sidebar button on this macOS (it stays; harmless).
 - README screenshots: not included. Background screenshots show an inactive window (washed-out buttons), so take them yourself with ⇧⌘4 + Space (see `docs/PUBLISHING.md`).
 
+## Rename (post-0.1.0)
+
+Project, target, scheme, module, source folder (`NearDrop/` → `Blippy/`), entitlements, bridging header and the ObjC `ND…` prefix (now `BL…`) were renamed to Blippy; entries above that mention `NearDrop/` or `NearDrop.xcodeproj` refer to the old names. `NearbyShare/` (the protocol framework) keeps its name because it names Google's protocol. `scripts/set-identity.sh` now swaps the current maintainer identity for a fork's. Verified: renamed project builds (universal Release + DMG), installed app launches, window and full menu bar load.

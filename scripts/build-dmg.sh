@@ -9,7 +9,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 IDENTITY="${SIGN_IDENTITY:--}"
-VERSION="$(grep -m1 'MARKETING_VERSION' NearDrop.xcodeproj/project.pbxproj | sed 's/.*= \(.*\);/\1/')"
+VERSION="$(grep -m1 'MARKETING_VERSION' Blippy.xcodeproj/project.pbxproj | sed 's/.*= \(.*\);/\1/')"
 NAME="Blippy"
 DERIVED="build-release"
 DMG="dist/$NAME-$VERSION.dmg"
@@ -19,7 +19,7 @@ DMG="dist/$NAME-$VERSION.dmg"
 echo "==> Building $NAME $VERSION (universal, Release)"
 rm -rf "$DERIVED" dist
 mkdir -p dist
-xcodebuild -project NearDrop.xcodeproj -scheme NearDrop -configuration Release -derivedDataPath "$DERIVED" \
+xcodebuild -project Blippy.xcodeproj -scheme Blippy -configuration Release -derivedDataPath "$DERIVED" \
   ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO \
   CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$IDENTITY" DEVELOPMENT_TEAM="" \
   CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=YES build | tail -3

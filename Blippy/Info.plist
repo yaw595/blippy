@@ -6,8 +6,8 @@
 	<array>
 		<string>_FC9F5ED42C8A._tcp</string>
 	</array>
-	<!-- Lets files be dropped onto NearDrop (Finder sidebar item, Dock, Open With) to send them.
-	     Rank "None" so NearDrop never becomes the default app for any file type. -->
+	<!-- Lets files be dropped onto Blippy (Finder sidebar item, Dock, Open With) to send them.
+	     Rank "None" so Blippy never becomes the default app for any file type. -->
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

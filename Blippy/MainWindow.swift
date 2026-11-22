@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 //  MainWindow.swift
-//  NearDrop
+//  Blippy
 //
 //  The app's own window: the same device picker as the Share sheet (ShareRootView),
 //  plus drag-and-drop and "Choose Files…". Opened from launch, the menu bar,
@@ -27,10 +27,10 @@ final class MainWindowController: NSWindowController, NSWindowDelegate {
 		window.isReleasedWhenClosed = false
 		window.collectionBehavior = [.moveToActiveSpace, .fullScreenPrimary]
 		window.minSize = NSSize(width: 720, height: 500)
-		window.setFrameAutosaveName("NearDropAppWindow")
+		window.setFrameAutosaveName("BlippyAppWindow")
 		super.init(window: window)
 		window.delegate = self
-		if !window.setFrameUsingName("NearDropAppWindow") {
+		if !window.setFrameUsingName("BlippyAppWindow") {
 			window.center()
 		}
 	}
@@ -103,7 +103,7 @@ final class MainWindowController: NSWindowController, NSWindowDelegate {
 		return session
 	}
 
-	/// A system notification when a send finishes while NearDrop is in the background.
+	/// A system notification when a send finishes while Blippy is in the background.
 	private func notifySent(_ sent: [ShareModel.Transfer]) {
 		guard !(window?.isKeyWindow ?? false) else { return }
 		let content = UNMutableNotificationContent()

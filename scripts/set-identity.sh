@@ -1,10 +1,10 @@
 #!/bin/bash
-# Fills in your project identity in one go: GitHub username, Buy Me a Coffee link and the bundle ID.
+# For forks: replaces the current maintainer's identity (GitHub name, support link, bundle ID) with yours.
 #
-#   scripts/set-identity.sh --github YOUR_USERNAME [--coffee https://buymeacoffee.com/you] [--bundle-id com.example.Blippy]
+#   scripts/set-identity.sh --github YOUR_USERNAME [--coffee https://example.com/support] [--bundle-id com.example.Blippy]
 #
-# Run it once, before your first release build. It edits AppInfo.swift, the Xcode project,
-# the README/docs and the GitHub templates. Review the result with `git diff`.
+# Run it once, before your first release build. It edits Blippy/AppInfo.swift, the Xcode project, the
+# README/docs and the GitHub templates. Review the result with `git diff`.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -21,26 +21,34 @@ done
 LOWER="$(echo "$GITHUB" | tr '[:upper:]' '[:lower:]')"
 [ -n "$BUNDLE_ID" ] || BUNDLE_ID="io.github.$LOWER.Blippy"
 
+# What the project says right now
+OLD_OWNER="$(sed -n 's/.*static let githubOwner = "\(.*\)".*/\1/p' Blippy/AppInfo.swift)"
+OLD_COFFEE="$(sed -n 's/.*static let coffeeLink = "\(.*\)".*/\1/p' Blippy/AppInfo.swift)"
+OLD_ID="$(sed -n 's/.*PRODUCT_BUNDLE_IDENTIFIER = \(.*\);/\1/p' Blippy.xcodeproj/project.pbxproj | grep -v ShareExtension | head -1)"
+esc() { printf '%s' "$1" | sed 's/[][\.*^$/|&]/\\&/g'; }
+
 # Swift constants
-sed -i '' "s|static let githubOwner = \"YOUR-GITHUB-USERNAME\"|static let githubOwner = \"$GITHUB\"|" NearDrop/AppInfo.swift
+sed -i '' "s|static let githubOwner = \".*\"|static let githubOwner = \"$GITHUB\"|" Blippy/AppInfo.swift
 if [ -n "$COFFEE" ]; then
-  sed -i '' "s|static let coffeeLink = \"\"|static let coffeeLink = \"$COFFEE\"|" NearDrop/AppInfo.swift
+  sed -i '' "s|static let coffeeLink = \".*\"|static let coffeeLink = \"$COFFEE\"|" Blippy/AppInfo.swift
 fi
 
 # Docs and GitHub files
-FILES=$(grep -rlE "YOUR-GITHUB-USERNAME|YOUR-COFFEE-NAME|buymeacoffee.com/YOUR" README.md CONTRIBUTING.md CODE_OF_CONDUCT.md docs .github 2>/dev/null || true)
+FILES=$(grep -rlF "$OLD_OWNER" README.md CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md docs .github 2>/dev/null || true)
 for f in $FILES; do
-  sed -i '' "s|YOUR-GITHUB-USERNAME|$GITHUB|g" "$f"
-  if [ -n "$COFFEE" ]; then
-    NAME="${COFFEE##*/}"
-    sed -i '' -e "s|https://buymeacoffee.com/YOUR-COFFEE-NAME|$COFFEE|g" -e "s|YOUR-COFFEE-NAME|$NAME|g" "$f"
-  fi
+  sed -i '' "s|$(esc "$OLD_OWNER")|$GITHUB|g" "$f"
 done
+if [ -n "$COFFEE" ] && [ -n "$OLD_COFFEE" ]; then
+  for f in $(grep -rlF "$OLD_COFFEE" README.md .github docs 2>/dev/null || true); do
+    sed -i '' "s|$(esc "$OLD_COFFEE")|$COFFEE|g" "$f"
+  done
+fi
 
 # Bundle identifiers (the app, and the Share extension inside it)
-sed -i '' "s|me\\.grishka\\.NearDrop|$BUNDLE_ID|g" NearDrop.xcodeproj/project.pbxproj
+sed -i '' "s|$(esc "$OLD_ID")|$BUNDLE_ID|g" Blippy.xcodeproj/project.pbxproj
+sed -i '' "s|$(esc "$OLD_ID")\.queue|$BUNDLE_ID.queue|" NearbyShare/NearbyConnection.swift 2>/dev/null || true
 
-echo "GitHub:     $GITHUB"
-echo "Bundle ID:  $BUNDLE_ID (Share extension: $BUNDLE_ID.ShareExtension)"
-echo "Coffee:     ${COFFEE:-not set (the support section stays hidden)}"
+echo "GitHub:     $OLD_OWNER -> $GITHUB"
+echo "Bundle ID:  $OLD_ID -> $BUNDLE_ID (Share extension: $BUNDLE_ID.ShareExtension)"
+echo "Support:    ${COFFEE:-unchanged}"
 echo "Done. Review with: git diff"
